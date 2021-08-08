@@ -75,6 +75,7 @@ public class itemLookScript : MonoBehaviour
                 GetComponent<playerLookScript>().enabled = true;
                 GetComponent<pickUpScript>().enabled = true;
                 item.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                item.GetComponent<Collider>().enabled = true;
                 reversed = true;
             }
         }

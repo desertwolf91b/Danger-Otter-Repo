@@ -10,6 +10,10 @@ public class pickUpScript : MonoBehaviour
     private Vector3 previousPosition;
     public LayerMask intractable;
     public LayerMask focussable;
+    public Vector3 locationClose;
+    public Vector3 locationMed;
+    public Vector3 locationFar;
+    private zoomScript ZS;
     void Awake() 
     {
         cam = GameObject.Find("FirstPersonCam").GetComponent<Camera>();
@@ -17,6 +21,7 @@ public class pickUpScript : MonoBehaviour
         itemContainer = GameObject.Find("ItemHolder");
         outline = GameObject.Find("Outline").GetComponent<RawImage>(); 
         area = GameObject.Find("Area").GetComponent<RawImage>();
+        ZS = GetComponent<zoomScript>();
 
         area.enabled = false; 
     }
@@ -31,18 +36,38 @@ public class pickUpScript : MonoBehaviour
             if ((Input.GetKeyDown(KeyCode.Mouse0)) || (Input.GetKeyDown(KeyCode.Space)))
             {
                 previousPosition = hit.transform.position;
+                
+                switch (hit.transform.tag)
+                {
+                    case ("close"):
+                        {
+                            itemContainer.transform.localPosition = locationClose;
+                            break;
+                        }
+                    case ("med"):
+                        {
+                            itemContainer.transform.localPosition = locationMed;
+                            break;
+                        }
+                    case ("far" ):
+                        {
+                            itemContainer.transform.localPosition = locationFar;
+                            break;
+                        }
+                }
+
+                GameObject.Find(hit.transform.name).gameObject.GetComponent<Collider>().enabled = false;
                 maniuplateObject(GameObject.Find(hit.transform.name));
                 setUI(false);
             }
         }
-        else if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, 20f, focussable))
+        else if (ZS.areaOn)
         {
             area.enabled = true;
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                area.enabled = false;
-                outline.enabled = false;
-            }
+        }
+        else if (ZS.outlineOn == false)
+        {
+            outline.enabled = false;
         }
         else
         {

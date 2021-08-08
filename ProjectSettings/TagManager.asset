@@ -6,6 +6,9 @@ TagManager:
   tags:
   - InteractableTrigger
   - focussableTrigger
+  - close
+  - med
+  - far
   layers:
   - Default
   - TransparentFX
