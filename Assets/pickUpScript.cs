@@ -9,6 +9,7 @@ public class pickUpScript : MonoBehaviour
     private RawImage outline; private RawImage area;
     private Vector3 previousPosition;
     public LayerMask intractable;
+    public LayerMask focussable;
     void Awake() 
     {
         cam = GameObject.Find("FirstPersonCam").GetComponent<Camera>();
@@ -22,9 +23,9 @@ public class pickUpScript : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
-        if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, 5f, intractable))
+        if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, 3f, intractable))
         {
-            Debug.DrawRay(cam.transform.position, cam.transform.TransformDirection(Vector3.forward) * 5f, Color.green);
+            Debug.DrawRay(cam.transform.position, cam.transform.TransformDirection(Vector3.forward) * 3f, Color.green);
             area.enabled = true;
 
             if ((Input.GetKeyDown(KeyCode.Mouse0)) || (Input.GetKeyDown(KeyCode.Space)))
@@ -34,9 +35,19 @@ public class pickUpScript : MonoBehaviour
                 setUI(false);
             }
         }
+        else if (Physics.Raycast(cam.transform.position, cam.transform.TransformDirection(Vector3.forward), out hit, 20f, focussable))
+        {
+            area.enabled = true;
+            if (Input.GetKey(KeyCode.Mouse0))
+            {
+                area.enabled = false;
+                outline.enabled = false;
+            }
+        }
         else
         {
             Debug.DrawRay(cam.transform.position, cam.transform.TransformDirection(Vector3.forward) * 5f, Color.red);
+            outline.enabled = true;
             area.enabled = false;
         }
         if (area.transform.position != new Vector3(Screen.width / 2f, Screen.height / 2f, 0f))
